@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import "./header.css";
 
 const Header = () => {
@@ -10,13 +10,14 @@ const Header = () => {
       if (location.pathname === "/"){
         setActiveTab("Home")
       } else if (location.pathname ==="/add"){
-        setActiveTab("Add")
+        setActiveTab("AddContact")
       } else if (location.pathname === "/about"){
         setActiveTab("About")
       } 
     }, [location])
   return (
-    <div className="header">
+    <>
+    <nav className="header">
         <p className="logo">Contact App</p>
         <div className="header-right">
           <Link to="/">
@@ -46,8 +47,10 @@ const Header = () => {
             </p>
           </Link>
         </div>
-    </div>
+    </nav>
+    <Outlet />
+    </>
   )
 }
 
-export default Header
+export default Header;
