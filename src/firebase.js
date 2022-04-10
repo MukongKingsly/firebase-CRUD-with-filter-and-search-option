@@ -8,8 +8,9 @@ const firebaseConfig = {
     storageBucket: "fir-crud-70cce.appspot.com",
     messagingSenderId: "494417853376",
     appId: "1:494417853376:web:2686d79e10b5be6bd46625"
-  };
-  
-  const app = initializeApp(firebaseConfig);
+};
 
-  export const db = getFirestore(app);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+export const db = getFirestore(app);

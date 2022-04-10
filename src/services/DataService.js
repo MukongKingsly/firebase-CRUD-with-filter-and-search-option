@@ -9,30 +9,29 @@ import {
   doc,
 } from "firebase/firestore";
 
-const contactCollectionRef = collection(db, "contacts");
-class ContactDataService {
-  addContact = (newContact) => {
-    return addDoc(contactCollectionRef, newContact);
+const dbRef = collection(db, "contacts");
+class DataService {
+  getAllContacts() {
+    return getDocs(dbRef);
+  };
+  addContact(newContact) {
+    return addDoc(dbRef, newContact);
   };
 
-  updateContact = (id, updatedContact) => {
+  updateContact(id, updatedContact) {
     const contactDoc = doc(db, "contacts", id);
     return updateDoc(contactDoc, updatedContact);
   };
 
-  deleteContact = (id) => {
+  deleteContact(id) {
     const contactDoc = doc(db, "contacts", id);
     return deleteDoc(contactDoc);
   };
 
-  getAllContacts = () => {
-    return getDocs(contactCollectionRef);
-  };
-
-  getContact = (id) => {
+  getContact(id) {
     const contactDoc = doc(db, "contacts", id);
     return getDoc(contactDoc);
   };
 }
 
-export default new ContactDataService();
+export default new DataService();

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
-import ContactDataService from "../services/ContactDataService";
+import DataService from "../services/DataService";
 import { toast } from "react-toastify";
 import "./addEdit.css";
 
@@ -29,11 +29,11 @@ const AddEdit = ({ id, setContactId }) => {
     } 
     try {
       if (id !== undefined && id !== "") {
-        await ContactDataService.updateContact(id, userInfo);
+        await DataService.updateContact(id, userInfo);
         setContactId("");
         toast.success("Updated successfully!");
       } else {
-        await ContactDataService.addContact(userInfo); 
+        await DataService.addContact(userInfo); 
         toast.success("New Book added successfully!");
       }
         setUserInfo("")
