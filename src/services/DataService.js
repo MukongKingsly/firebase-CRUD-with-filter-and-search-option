@@ -30,6 +30,7 @@ class DataService {
 
   getContact(id) {
     const contactDoc = doc(db, "contacts", id);
+    console.log("The id here is ", id)
     return getDoc(contactDoc);
   };
 }

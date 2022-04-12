@@ -1,9 +1,11 @@
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCaaI64DD9m_WpB0e_bWxSW3AHTrTkqD-g",
     authDomain: "fir-crud-70cce.firebaseapp.com",
+    databaseURL: "https://fir-crud-70cce-default-rtdb.firebaseio.com",
     projectId: "fir-crud-70cce",
     storageBucket: "fir-crud-70cce.appspot.com",
     messagingSenderId: "494417853376",
