@@ -3,22 +3,36 @@ import { useNavigate } from 'react-router-dom';
 import DataService from "../services/DataService";
 import { toast } from "react-toastify";
 import "./addEdit.css";
+import { db } from "../firebase"
 
 
-const AddEdit = ({id, setContactId}) => {
+const AddEdit = (id) => {
+  const [dataFromDb, setDataFromDb] = useState([]);
   let navigate = useNavigate();
   const [message, setMessage] = useState ({ error: false, msg: ""});
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [contact, setContact] = useState("");
-  const userInfo = {
-    name,
-    email,
-    contact
-  };
+  const [userInfo, setUserInfo]= useState ({
+    name: "",
+    email: "",
+    contact: ""
+  });
+
+  const handleChange = e => {
+    setUserInfo({
+      ...userInfo,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  useEffect(() => {
+    if (id) {
+      setUserInfo({...dataFromDb})
+    
+    }
+  }, [id])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("line 33",userInfo)
     if(!userInfo.name || !userInfo.email || !userInfo.contact) {
       toast.error("Please provide value in each input field");
       return;
@@ -26,7 +40,6 @@ const AddEdit = ({id, setContactId}) => {
     try {
       if (id !== undefined && id !== "") {
         await DataService.updateContact(id, userInfo);
-        setContactId("");
         setMessage({ error: false, msg: "Updated successfully!" });
         toast.success(message);
         navigate("/");
@@ -41,19 +54,18 @@ const AddEdit = ({id, setContactId}) => {
       setMessage({ error: true, msg:err.msg });
       toast.error(message);
     }
-       setName("");
-       setEmail("");
-       setContact("");
+       setUserInfo("")
   };
 
-  const onEdit = async () => {
+  const onEdit = async (id) => {
     setMessage("");
       try {
         const docSnap = await DataService.getContact(id);
-        console.log("The recod is :", docSnap.data());
-        setName(docSnap.data().name);
-        setEmail(docSnap.data().email);
-        setContact(docSnap.data().contact);
+        setUserInfo({...docSnap})
+        // setName(docSnap.data().name);
+        // setEmail(docSnap.data().email);
+        // setContact(docSnap.data().contact);
+        console.log("line 70", userInfo)
       } catch (err) {
         setMessage({ error: true, msg: err.message });
         toast.error(message)
@@ -61,7 +73,7 @@ const AddEdit = ({id, setContactId}) => {
   }
 
   useEffect(() => {
-    console.log("The id here is : ", id);
+    console.log("The id here is 74: ", id);
     if (id !== undefined && id !== "") {
       onEdit();
     }
@@ -79,34 +91,31 @@ const AddEdit = ({id, setContactId}) => {
                 <label htmlFor="name">Name
                     <input 
                       type="text"
-                      id="name"
-                      value={name}
-                      placeholder="Your Name..."
-                      onChange={(e) => setName(e.target.value)}
+                      name="name"
+                      onChange={handleChange}
+                      placeholder="Your Name..."                      
                     />
                 </label>
 
                 <label htmlFor="email">Email
                     <input 
                       type="email"
-                      id="email"
-                      value={email}
-                      placeholder="Your Email..."
-                      onChange={(e) => setEmail(e.target.value)}
+                      name="email"
+                      onChange={handleChange}
+                      placeholder="Your Email..."                     
                     />
                 </label>
 
                 <label htmlFor="contact">Contact
                     <input 
                       type="number"
-                      id="contact"
-                      value={contact}
-                      placeholder="Your Contact No..."
-                      onChange={(e) => setContact(e.target.value)}
+                      name="contact"
+                      onChange={handleChange}
+                      placeholder="Your Contact No..."                      
                     />
                 </label>
 
-                <input type="submit" value="Save" onClick={handleSubmit}/>
+                <input type="submit" value={id ? "Update" : "Save"} onClick={handleSubmit}/>
                
         </form>
 

@@ -46,7 +46,6 @@ const Home = ({id}) => {
     console.log("line 46", dataFromDb)
       try {
         const docSnap = await DataService.getContact(id);
-        console.log("The recod is :", docSnap.data());
         setName(docSnap.data().name);
         setEmail(docSnap.data().email);
         setContact(docSnap.data().contact);
@@ -57,7 +56,6 @@ const Home = ({id}) => {
   }
 
   useEffect(() => {
-    console.log("The id here is : ", id);
     if (id !== undefined && id !== ""){
       onEdit();
     }
