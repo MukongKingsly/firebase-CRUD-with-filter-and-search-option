@@ -1,38 +1,72 @@
 import React, { useState, useEffect} from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import DataService from '../services/DataService';
-import { db } from '../firebase';
+import { toast } from 'react-toastify';
 import "./view.css";
 
 function View() {
-  const [user, setUser] = useState({});
+  let navigate = useNavigate();
+  const [userInfo, setUserInfo]= useState ({
+    name: "",
+    email: "",
+    contact: ""
+  });
   const {id} = useParams();
-  useEffect(() => {
-    
-  })
-  // useEffect(() => {
-  //   db.child(`contacts/${id}`).get().then((snapshot) => {
-  //     if (snapshot.exists()) {
-  //         setUser({...snapshot.val()});
-  //     } else {
-  //       setUser({});
-  //     }
-  //   });
-  // }, [id]);
-  // console.log("User ", user)
-  // useEffect(() => {
-  //   const userData = async () => {
-  //     try {
-  //       const docSnap = await DataService.getContact(id);
-  //       setUser(docSnap)
-  //       console.log(user)
-  //     } catch (err) {
-  //       console.log("Error occured")
-  //     }
-  //   }
-  // }, [id])
+
+  useEffect((e) => {
+    if (id) {
+      const onEdit = async () => {
+        try {
+          const docSnap = await DataService.getContact(id);
+           setUserInfo({...docSnap.data()});
+        } catch (err) {
+          toast.error("There was an error")
+        }
+      }
+      onEdit();
+    }
+    else {
+      setUserInfo("")
+    }
+    return () => {
+      setUserInfo("")
+    }
+  }, [id])
+
+
+  const onDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this contact?")) {
+      await DataService.deleteContact(id);
+      navigate("/")
+      toast.success("Contact deleted successfully")
+    }     
+  };
+
   return (
-    <div>View</div>
+    <div style={{ marginTop:"150px"}}>
+      <div className="card">
+        <div className="card-header">
+          <p>User Contact Detail</p>
+        </div>
+        <div className="smContainer">
+            <strong>ID: </strong>
+            <span>{id}</span><br/><br/>
+
+            <strong>Name: </strong>
+            <span>{userInfo.name}</span><br/><br/>
+
+            <strong>Email: </strong>
+            <span>{userInfo.email}</span><br/><br/>
+
+            <strong>Contact: </strong>
+            <span>{userInfo.contact}</span><br/><br/>
+
+            <Link to="/">
+              <button className="btn btn-edit">Go Back</button>
+            </Link>
+        </div>
+      </div>
+    </div>
   )
 }
 

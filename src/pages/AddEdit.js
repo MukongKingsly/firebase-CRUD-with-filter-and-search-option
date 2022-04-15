@@ -34,10 +34,10 @@ const AddEdit = () => {
       onEdit();
     }
     else {
-      setUserInfo(userInfo.name==="" && userInfo.email==="" && userInfo.contact==="")
+      setUserInfo("")
     }
     return () => {
-      setUserInfo(userInfo.name==="" && userInfo.email==="" && userInfo.contact==="")
+      setUserInfo("")
     }
   }, [id])
 
@@ -65,7 +65,7 @@ const AddEdit = () => {
       }      
       }
        setUserInfo("")
-       setTimeout(() => navigate("/"), 1000)
+       setTimeout(() => navigate("/"), 500)
   };
 }
 
@@ -77,8 +77,7 @@ const AddEdit = () => {
               margin: "auto",
               padding: "15px",
               maxWidth: "400px",
-              alignContent: "center"
-              
+              alignContent: "center"              
               }}>
                 <label htmlFor="name">Name
                     <input 
@@ -109,11 +108,8 @@ const AddEdit = () => {
                       placeholder="Your Contact No..."                      
                     />
                 </label>
-
-                <input type="submit" value={id ? "Update": "Save"} />
-               
+                <input type="submit" value={id ? "Update": "Save"} />               
         </form>
-
     </div>
   )
 }

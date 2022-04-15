@@ -1,5 +1,6 @@
 {
     "editor.tabCompletion": "on",
     "editor.formatOnSave": true,
-    "diffEditor.codeLens": true
+    "diffEditor.codeLens": true,
+    "emmet.triggerExpansionOnTab": true
 }
