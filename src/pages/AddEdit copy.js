@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import DataService from "../services/DataService";
 import { toast } from "react-toastify";
 import "./addEdit.css";
 
-const AddEdit = () => {
+const AddEdit = (id) => {
+  const [dataFromDb, setDataFromDb] = useState([]);
   let navigate = useNavigate();
   const [message, setMessage] = useState ({ error: false, msg: ""});
   const [userInfo, setUserInfo]= useState ({
@@ -20,71 +21,75 @@ const AddEdit = () => {
     })
   }
 
-  const {id} = useParams();
-  useEffect((e) => {
-    if (id) {
-      const onEdit = async () => {
-        try {
-          const docSnap = await DataService.getContact(id);
-           setUserInfo({...docSnap.data()});
-        } catch (err) {
-          toast.error("There was an error")
-        }
-      }
-      onEdit();
-    }
-    else {
-      setUserInfo(userInfo.name==="" && userInfo.email==="" && userInfo.contact==="")
-    }
-    return () => {
-      setUserInfo(userInfo.name==="" && userInfo.email==="" && userInfo.contact==="")
-    }
-  }, [id])
+  // useEffect(() => {
+  //   if (id) {
+  //     setUserInfo({...dataFromDb})
+    
+  //   }
+  // }, [id])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(!userInfo.name || !userInfo.email || !userInfo.contact) {
       toast.error("Please provide value in each input field");
       return;
-    } else {
-      if (!id) {
-        try {    
-          await DataService.addContact(userInfo);
-          toast.success("New contact added successfully!");       
-      } catch (err) {
-        setMessage({ error: true, msg:err.msg });
-        toast.error(message);
-      }
-        } else {
-            try {    
-              await DataService.updateContact(id, userInfo);
-              toast.success("Contact updated successfully!");       
-          } catch (err) {
-            setMessage({ error: true, msg:err.msg });
-            toast.error(message);
-      }      
+    } 
+      else {
+        try {
+          if (id !== undefined && id !== "") {
+            await DataService.updateContact(id, userInfo);
+            setMessage({ error: false, msg: "Updated successfully!" });
+            toast.success(message);
+            navigate("/");
+          } else {
+            await DataService.addContact(userInfo);
+            setMessage({ error: false, msg: "New contact added successfully!" });
+            toast.success(message);
+            navigate("/");
+          }            
+        } catch (err) {
+          setMessage({ error: true, msg:err.msg });
+          toast.error(message);
+        }
       }
        setUserInfo("")
-       setTimeout(() => navigate("/"), 1000)
   };
-}
+
+  // const onEdit = async (id) => {
+  //   setMessage("");
+  //     try {
+  //       const docSnap = await DataService.getContact(id);
+  //       setUserInfo({...docSnap})
+  //       // setName(docSnap.data().name);
+  //       // setEmail(docSnap.data().email);
+  //       // setContact(docSnap.data().contact);
+  //       console.log("line 70", userInfo)
+  //     } catch (err) {
+  //       setMessage({ error: true, msg: err.message });
+  //       toast.error(message)
+  //     }
+  // }
+
+  // useEffect(() => {
+  //   console.log("The id here is 74: ", id);
+  //   if (id !== undefined && id !== "") {
+  //     onEdit();
+  //   }
+  // }, [id]);
 
   return (
     <div style={{marginTop: "100px"}}>
         <form 
-            onSubmit={handleSubmit}
             style={{ 
               margin: "auto",
               padding: "15px",
               maxWidth: "400px",
               alignContent: "center"
-              
               }}>
                 <label htmlFor="name">Name
                     <input 
                       type="text"
                       name="name"
-                      value={userInfo.name || ""}
                       onChange={handleChange}
                       placeholder="Your Name..."                      
                     />
@@ -94,7 +99,6 @@ const AddEdit = () => {
                     <input 
                       type="email"
                       name="email"
-                      value={userInfo.email || ""}
                       onChange={handleChange}
                       placeholder="Your Email..."                     
                     />
@@ -104,13 +108,12 @@ const AddEdit = () => {
                     <input 
                       type="number"
                       name="contact"
-                      value={userInfo.contact || ""}
                       onChange={handleChange}
                       placeholder="Your Contact No..."                      
                     />
                 </label>
 
-                <input type="submit" value={id ? "Update": "Save"} />
+                <input type="submit" value="Save" onClick={handleSubmit}/>
                
         </form>
 
