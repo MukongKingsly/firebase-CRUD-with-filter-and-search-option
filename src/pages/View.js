@@ -1,11 +1,10 @@
 import React, { useState, useEffect} from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import DataService from '../services/DataService';
 import { toast } from 'react-toastify';
 import "./view.css";
 
 function View() {
-  let navigate = useNavigate();
   const [userInfo, setUserInfo]= useState ({
     name: "",
     email: "",
@@ -32,15 +31,6 @@ function View() {
       setUserInfo("")
     }
   }, [id])
-
-
-  const onDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this contact?")) {
-      await DataService.deleteContact(id);
-      navigate("/")
-      toast.success("Contact deleted successfully")
-    }     
-  };
 
   return (
     <div style={{ marginTop:"150px"}}>
