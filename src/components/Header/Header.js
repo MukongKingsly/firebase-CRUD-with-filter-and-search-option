@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import "./header.css";
 
 const Header = () => {
     const [activeTab, setActiveTab] = useState("Home");
     const location = useLocation();
+    let navigate = useNavigate();
+    const [search, setSearch] = useState("");
 
     useEffect(() =>{
       if (location.pathname === "/"){
@@ -15,11 +17,26 @@ const Header = () => {
         setActiveTab("About")
       } 
     }, [location])
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      navigate(`/search?name=${search}`);
+      setSearch("");
+    }
   return (
     <>
     <nav className="header">
         <p className="logo">Contact App</p>
         <div className="header-right">
+          <form onSubmit={handleSubmit}>
+            <input 
+              type="text"
+              className="inputField"
+              placeholder="Search Name..."
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+            />
+          </form>
           <Link to="/">
             <p
               className={`${activeTab === "Home" ? "active" : ""}`}
