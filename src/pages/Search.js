@@ -3,58 +3,42 @@ import { useLocation, Link, useParams } from "react-router-dom";
 import DataService from "../services/DataService";
 import { db } from "../firebase";
 import { collection, query, where } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 function Search() {
-  const [data, setData] = useState({});
+  const [dsata, setDsata] = useState([]);
 
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
   };
-  //const { id } = useParams();
+  const { id } = useParams();
   //const dbRef = collection(db, "contacts");
   //const databaseRef = collection(db, "contacts");
   let query = useQuery();
   let search = query.get("name");
-  console.log("search", search);
-
-  // useEffect(
-  //   (e) => {
-  //     if (id) {
-  //       const onSearch = async () => {
-  //         try {
-  //           const docSnap = await DataService.getContact(id);
-  //           const q = query(
-  //             databaseRef,
-  //             where(search, "==", docSnap.data().name)
-  //           );
-  //           console.log("20: ", q);
-  //           setSearchData({ ...docSnap.data() });
-  //         } catch (err) {
-  //           console.log(err);
-  //         }
-  //       };
-  //       onSearch();
-  //     } else {
-  //       setSearchData("");
-  //     }
-  //     return () => {
-  //       setSearchData("");
-  //     };
-  //   },
-  //   [id]
-  // );
+  console.log("line 19 search", search);
 
   useEffect(() => {
-    searchData();
-  }, [search]);
+    getAllDataFromDb();
+  }, []);
 
-  const searchData = () => {
-    collection(db, "contacts").equalTo(search);
+  const getAllDataFromDb = async () => {
+    const allData = await DataService.getAllContacts();
+    setDsata({ ...allData.data() });
+    console.log("line 28 ", allData);
   };
+
+  // useEffect(() => {
+  //   searchData();
+  // }, [search]);
+
+  // const searchData = () => {
+  //   collection(db, "contacts").equalTo(search);
+  // };
 
   return (
     <div>
-      <h2> Search </h2>{" "}
+      <h2> Search </h2>
     </div>
   );
 }

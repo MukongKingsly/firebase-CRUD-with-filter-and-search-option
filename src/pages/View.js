@@ -18,6 +18,7 @@ function View() {
         const onEdit = async () => {
           try {
             const docSnap = await DataService.getContact(id);
+            console.log("line 21:", docSnap.data());
             setUserInfo({ ...docSnap.data() });
           } catch (err) {
             toast.error("There was an error");
