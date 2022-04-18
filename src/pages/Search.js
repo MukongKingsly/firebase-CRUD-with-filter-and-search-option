@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, Link, useParams } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import DataService from "../services/DataService";
-import { db } from "../firebase";
-import { collection, query, where } from "firebase/firestore";
-import { toast } from "react-toastify";
 
 function Search() {
   const [dsata, setDsata] = useState([]);
@@ -11,12 +8,9 @@ function Search() {
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
   };
-  const { id } = useParams();
-  //const dbRef = collection(db, "contacts");
-  //const databaseRef = collection(db, "contacts");
+
   let query = useQuery();
   let search = query.get("name");
-  console.log("line 19 search", search);
 
   useEffect(() => {
     getAllDataFromDb();
@@ -24,21 +18,36 @@ function Search() {
 
   const getAllDataFromDb = async () => {
     const allData = await DataService.getAllContacts();
-    setDsata({ ...allData.data() });
-    console.log("line 28 ", allData);
+    setDsata(allData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
-
-  // useEffect(() => {
-  //   searchData();
-  // }, [search]);
-
-  // const searchData = () => {
-  //   collection(db, "contacts").equalTo(search);
-  // };
 
   return (
     <div>
-      <h2> Search </h2>
+      <h2>Names Found</h2>
+      <Link to="/">
+        <button className="btn btn-edit">Go Back</button>
+      </Link>
+      {dsata
+        .filter((val) => {
+          if (dsata === "") {
+            //returns all names if nothing is typed before hitting enter
+            return val;
+          } else if (
+            val.name.toLowerCase().includes(search.toLocaleLowerCase())
+          ) {
+            // returns all data containing the word user typed
+            return val;
+          } else {
+            return;
+          }
+        })
+        .map((val, key) => {
+          return (
+            <div key={key}>
+              <p>{val.name}</p>
+            </div>
+          );
+        })}
     </div>
   );
 }
