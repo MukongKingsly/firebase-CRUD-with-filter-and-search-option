@@ -7,8 +7,6 @@ import {
   updateDoc,
   deleteDoc,
   doc,
-  query,
-  where,
 } from "firebase/firestore";
 
 const dbRef = collection(db, "contacts");

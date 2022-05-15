@@ -38,7 +38,7 @@ function Search() {
             // returns all data containing the word user typed
             return val;
           } else {
-            return;
+            return "";
           }
         })
         .map((val, key) => {
