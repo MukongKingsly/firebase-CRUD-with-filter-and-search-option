@@ -1,6 +1,6 @@
 # Concept
 
-This small project has helped me understand how to create, read, update and delete data from cloud firestore provided by Firebase (Google). With this knowledge I can build any app which uses firebase as the backend
+This small project has helped me understand how to create, read, update and delete data (CRUD) from cloud firestore provided by Firebase (Google). With this knowledge I can build any app which uses firebase as the backend
 
 - The webapp is a phone contact app where a user creates a new user using name, email and contact.
 
