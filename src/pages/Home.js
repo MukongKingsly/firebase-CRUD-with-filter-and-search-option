@@ -23,7 +23,6 @@ const Home = () => {
       toast.success("Contact deleted successfully");
     }
   };
-  console.log(process.env);
 
   return (
     <div style={{ marginTop: "100px" }}>
